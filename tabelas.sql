@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users(
     id VARCHAR(36) NOT NULL,
     name VARCHAR(100),
     email VARCHAR(100) UNIQUE NOT NULL,
-    created_at VARCHAR(24),
+    created_at DATE,
 
     PRIMARY KEY(id) 
 );
