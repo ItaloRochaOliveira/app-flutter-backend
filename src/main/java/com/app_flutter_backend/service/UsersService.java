@@ -5,39 +5,70 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.app_flutter_backend.interfaces.service.IUserServiceReturn;
 import com.app_flutter_backend.models.entity.Users;
 import com.app_flutter_backend.models.repository.UsersRepository;
 
 @Service
 public class UsersService {
     private UsersRepository usersRepository;
+    private IUserServiceReturn userReturn;
 
     @Autowired
     public void instanceRepo(UsersRepository usersRepository){
         this.usersRepository = usersRepository;
     }
 
-    public List<Users> getAll(){
-        return usersRepository.findAll();
+    public IUserServiceReturn getAll(){
+        return new IUserServiceReturn(
+            200,
+            "Consulta feita com sucesso",
+            usersRepository.findAll()
+        );
     }
 
-    public Users getById(String id){
-        return usersRepository.findById(id);
+    public IUserServiceReturn getById(String id){
+        System.out.println("Aqui");
+        System.out.println(usersRepository.findById(id));
+        return new IUserServiceReturn(
+            200, 
+        "Consulta feita com sucesso",
+            usersRepository.findById(id)
+            );
     }
 
-    public Users create(Users userForCreate){
-        return usersRepository.save(userForCreate);
+    public IUserServiceReturn create(Users userForCreate){
+        return new IUserServiceReturn(
+            200, 
+        "Usuário criado com sucesso",
+                usersRepository.save(userForCreate)
+            );
     }
 
-    public Users edit(String id, Users userInfo){
+    public IUserServiceReturn edit(String id, Users userInfo){
         Users userForUpdate = usersRepository.findById(id);
         userForUpdate.setName(userInfo.getName());
         userForUpdate.setEmail(userInfo.getEmail());
         userForUpdate.setUpdated_at(userInfo.getUpdated_at());
-        return usersRepository.save(userForUpdate);
+        return new IUserServiceReturn(
+            200, 
+        "Usuário editado com sucesso",
+                usersRepository.save(userForUpdate)
+            );
     }
 
-    public Users delete(String id){
-        Users userDeleted = usersRepository.deleteById(id);;
+    public IUserServiceReturn delete(String id){
+        Users user = usersRepository.findById(id);
+        if(user.getId() == null) return new IUserServiceReturn(
+            200, 
+        "Usuário não existe mais no banco de dados",
+                usersRepository.findById(id)
+            );
+        usersRepository.deleteById(id);
+        return new IUserServiceReturn(
+            200, 
+        "Usuário excluido com sucesso",
+                usersRepository.findById(id)
+            );
     }
 }

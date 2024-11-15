@@ -3,14 +3,14 @@ version: '3.9'
 services:
   db:
     image: mysql:5.7
-    container_name: cadastro-de-usuario-docker
+    container_name: ${DB_DATABASE}
     ports:
-      - 3306:3306
+      - 3307:3306
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
       MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: login-docker
-      MYSQL_PASSWORD: ${DB_USER_PASS}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     restart: 'always'
     healthcheck:
       test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]

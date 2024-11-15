@@ -2,21 +2,34 @@ package com.app_flutter_backend.models.entity;
 
 import java.sql.Date;
 
-import org.springframework.data.annotation.Id;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
-@Entity
+enum Roles {
+    normal,
+    admin
+}
+
 @Table(name="users")
+@Entity
 public class Users {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
+    @NotNull
+    @GeneratedValue(strategy = GenerationType.UUID)  // Use a geração automática ou UUID manualmente
+    @Column(name = "id", updatable = false, nullable = false)
     private String id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Roles role = Roles.normal;
 
     @Column(name = "name", nullable = true, length = 100)
     private String name;
@@ -24,12 +37,16 @@ public class Users {
     @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
 
-    @Column(name = "created_at", nullable = false, length = 100, unique = true)
+    @Column(name = "created_at", nullable = false)
     private Date created_at;
 
-    @Column(name = "updated_at", nullable = false, length = 100, unique = true)
+    @Column(name = "updated_at", nullable = false)
     private Date updated_at;
 
+    // Construtor padrão
+    public Users() {}
+
+    // Construtor com parâmetros
     public Users(String id, String name, String email, Date created_at, Date updated_at) {
         this.id = id;
         this.name = name;
@@ -38,6 +55,17 @@ public class Users {
         this.updated_at = updated_at;
     }
 
+    // // Método chamado antes da persistência
+    // @PrePersist
+    // public void prePersist() {
+    //     if (id == null) {
+    //         // Gerar UUID
+    //         UUID uuid = UUID.randomUUID();
+    //         this.id = uuid.toString();  // Armazene o UUID como String
+    //     }
+    // }
+
+    // Getters e Setters
     public String getId() {
         return id;
     }
@@ -77,6 +105,4 @@ public class Users {
     public void setUpdated_at(Date updated_at) {
         this.updated_at = updated_at;
     }
-
-    
 }
