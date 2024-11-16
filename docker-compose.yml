@@ -13,9 +13,10 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     restart: 'always'
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
       timeout: 10s
-      retries: 5
+      retries: 3
     cap_add:
       - SYS_NICE
     volumes:

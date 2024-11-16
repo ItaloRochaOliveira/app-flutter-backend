@@ -2,6 +2,8 @@ package com.app_flutter_backend.models.entity;
 
 import java.sql.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,7 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 enum Roles {
     normal,
@@ -22,7 +23,6 @@ enum Roles {
 public class Users {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.UUID)  // Use a geração automática ou UUID manualmente
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
@@ -37,9 +37,11 @@ public class Users {
     @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private Date created_at;
 
+    @CreationTimestamp
     @Column(name = "updated_at", nullable = false)
     private Date updated_at;
 
@@ -54,16 +56,6 @@ public class Users {
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
-
-    // // Método chamado antes da persistência
-    // @PrePersist
-    // public void prePersist() {
-    //     if (id == null) {
-    //         // Gerar UUID
-    //         UUID uuid = UUID.randomUUID();
-    //         this.id = uuid.toString();  // Armazene o UUID como String
-    //     }
-    // }
 
     // Getters e Setters
     public String getId() {
