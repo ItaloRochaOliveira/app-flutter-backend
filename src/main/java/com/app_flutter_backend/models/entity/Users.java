@@ -6,17 +6,11 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-enum Roles {
-    normal,
-    admin
-}
 
 @Table(name="users")
 @Entity
@@ -27,15 +21,14 @@ public class Users {
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Roles role = Roles.normal;
-
     @Column(name = "name", nullable = true, length = 100)
     private String name;
 
     @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
+
+    @Column(name = "telefone", nullable = true, length = 17)
+    private String telefone;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
@@ -49,10 +42,11 @@ public class Users {
     public Users() {}
 
     // Construtor com parâmetros
-    public Users(String id, String name, String email, Date created_at, Date updated_at) {
+    public Users(String id, String name, String email, String telefone, Date created_at, Date updated_at) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.telefone = telefone;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
@@ -80,6 +74,14 @@ public class Users {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
     public Date getCreated_at() {

@@ -1,7 +1,7 @@
 package com.app_flutter_backend.service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,24 +20,35 @@ public class UsersService {
     }
 
     public IUserServiceReturn getAll(){
+        List<Users> users = usersRepository.findAll();
+        if(users.size() != 0) users.stream().map(
+            user -> {
+                user.setTelefone(setMask(user.getTelefone()));
+                return true;
+            }
+        )
+        .collect(Collectors.toList());
         return new IUserServiceReturn(
             200,
             "Consulta feita com sucesso",
-            usersRepository.findAll()
+            users
         );
     }
 
     public IUserServiceReturn getById(String id){
-        System.out.println("Aqui");
-        System.out.println(usersRepository.findById(id));
+        Users user = usersRepository.findById(id).orElse(null);
+        if(user != null) user.setTelefone(setMask(user.getTelefone()));
+
         return new IUserServiceReturn(
             200, 
         "Consulta feita com sucesso",
-            usersRepository.findById(id).orElse(null)
+            user
             );
     }
 
     public IUserServiceReturn create(Users userForCreate){
+        String telefoneWithoutMask = userForCreate.getTelefone().replaceAll("[\\s+\\-()]", "");
+        userForCreate.setTelefone(telefoneWithoutMask);
         return new IUserServiceReturn(
             200, 
         "Usuário criado com sucesso",
@@ -50,6 +61,8 @@ public class UsersService {
     .orElse(null);
         userForUpdate.setName(userInfo.getName());
         userForUpdate.setEmail(userInfo.getEmail());
+        String telefoneWithoutMask = userInfo.getTelefone().replaceAll("[\\s+\\-()]", "");
+        userForUpdate.setTelefone(telefoneWithoutMask);
         userForUpdate.setUpdated_at(userInfo.getUpdated_at());
         return new IUserServiceReturn(
             200, 
@@ -71,5 +84,9 @@ public class UsersService {
         "Usuário excluido com sucesso",
                 usersRepository.findById(id).orElse(null)
             );
+    }
+
+    private String setMask(String telefoneWithoutMask){
+        return telefoneWithoutMask.replaceAll("(\\d{2})(\\d{2})(\\d{5})(\\d{4})", "(+$1) $2 $3-$4");
     }
 }
