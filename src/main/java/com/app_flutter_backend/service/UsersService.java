@@ -19,44 +19,43 @@ public class UsersService {
         this.usersRepository = usersRepository;
     }
 
-    public IUserServiceReturn getAll(){
+    public IUserServiceReturn<List<Users>> getAll(){
         List<Users> users = usersRepository.findAll();
         if(users.size() != 0) users.stream().map(
             user -> {
-                user.setTelefone(setMask(user.getTelefone()));
+                if(user.getTelefone() != null) user.setTelefone(this.setMask(user.getTelefone()));
                 return true;
             }
-        )
-        .collect(Collectors.toList());
-        return new IUserServiceReturn(
+        ).collect(Collectors.toList());
+        return new IUserServiceReturn<List<Users>>(
             200,
             "Consulta feita com sucesso",
             users
         );
     }
 
-    public IUserServiceReturn getById(String id){
+    public IUserServiceReturn<Users> getById(String id){
         Users user = usersRepository.findById(id).orElse(null);
-        if(user != null) user.setTelefone(setMask(user.getTelefone()));
+        if(user.getTelefone() != null) user.setTelefone(setMask(user.getTelefone()));
 
-        return new IUserServiceReturn(
+        return new IUserServiceReturn<Users>(
             200, 
         "Consulta feita com sucesso",
             user
             );
     }
 
-    public IUserServiceReturn create(Users userForCreate){
+    public IUserServiceReturn<Users> create(Users userForCreate){
         String telefoneWithoutMask = userForCreate.getTelefone().replaceAll("[\\s+\\-()]", "");
         userForCreate.setTelefone(telefoneWithoutMask);
-        return new IUserServiceReturn(
+        return new IUserServiceReturn<Users>(
             200, 
         "Usuário criado com sucesso",
                 usersRepository.save(userForCreate)
             );
     }
 
-    public IUserServiceReturn edit(String id, Users userInfo){
+    public IUserServiceReturn<Users> edit(String id, Users userInfo){
         Users userForUpdate = usersRepository.findById(id)
     .orElse(null);
         userForUpdate.setName(userInfo.getName());
@@ -64,29 +63,29 @@ public class UsersService {
         String telefoneWithoutMask = userInfo.getTelefone().replaceAll("[\\s+\\-()]", "");
         userForUpdate.setTelefone(telefoneWithoutMask);
         userForUpdate.setUpdated_at(userInfo.getUpdated_at());
-        return new IUserServiceReturn(
+        return new IUserServiceReturn<Users>(
             200, 
         "Usuário editado com sucesso",
                 usersRepository.save(userForUpdate)
             );
     }
 
-    public IUserServiceReturn delete(String id){
+    public IUserServiceReturn<Users> delete(String id){
         Users user = usersRepository.findById(id).orElse(null);
-        if(user.getId() == null) return new IUserServiceReturn(
+        if(user.getId() == null) return new IUserServiceReturn<Users>(
             200, 
         "Usuário não existe mais no banco de dados",
                 usersRepository.findById(id).orElse(null)
             );
         usersRepository.deleteById(id);
-        return new IUserServiceReturn(
+        return new IUserServiceReturn<Users>(
             200, 
         "Usuário excluido com sucesso",
                 usersRepository.findById(id).orElse(null)
             );
     }
 
-    private String setMask(String telefoneWithoutMask){
-        return telefoneWithoutMask.replaceAll("(\\d{2})(\\d{2})(\\d{5})(\\d{4})", "(+$1) $2 $3-$4");
-    }
+    private String setMask(String telefoneWithoutMask) {
+        return telefoneWithoutMask.replaceAll("(\\d{2})(\\d{5})(\\d{4})", "($1) $2-$3");
+    }    
 }

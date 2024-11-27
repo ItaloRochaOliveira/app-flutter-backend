@@ -1,26 +1,15 @@
 package com.app_flutter_backend.interfaces.service;
 
-import java.util.List;
-
-import com.app_flutter_backend.models.entity.Users;
-
-public class IUserServiceReturn {
+public class IUserServiceReturn<Response> {
     int code;
-    Object message;
-    Users response ;
-    List<Users> responseArray ;
+    String message;
+    Response response;
 
     
-    public IUserServiceReturn(int code, Object message, Users response) {
+    public IUserServiceReturn(int code, String message, Response response) {
         this.code = code;
         this.message = message;
         this.response = response;
-    }
-
-    public IUserServiceReturn(int code, Object message, List<Users> responseArray) {
-        this.code = code;
-        this.message = message;
-        this.responseArray = responseArray;
     }
     
     public int getCode() {
@@ -32,21 +21,13 @@ public class IUserServiceReturn {
     public Object getMessage() {
         return message;
     }
-    public void setMessage(Object message) {
+    public void setMessage(String message) {
         this.message = message;
     }
-    public Users getResponse() {
+    public Response getResponse() {
         return response;
     }
-    public void setResponse(Users response) {
+    public void setResponse(Response response) {
         this.response = response;
     }
-    public List<Users> getResponseArray() {
-        return responseArray;
-    }
-    public void setResponseArray(List<Users> responseArray) {
-        this.responseArray = responseArray;
-    }
-
-    
 }
