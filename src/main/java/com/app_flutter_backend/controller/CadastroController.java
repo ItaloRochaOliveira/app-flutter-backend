@@ -2,6 +2,8 @@ package com.app_flutter_backend.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app_flutter_backend.interfaces.service.IUserServiceReturn;
 import com.app_flutter_backend.models.entity.Users;
 import com.app_flutter_backend.service.UsersService;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/usuario")
@@ -48,7 +48,7 @@ public class CadastroController{
     }
 
     @PutMapping("/{id}")
-    public IUserServiceReturn<Users> update(@RequestBody @Valid Users user, @PathVariable String id){
+    public IUserServiceReturn<Users> update( @RequestBody @Valid Users user, @PathVariable String id){
         IUserServiceReturn<Users> users = userService.edit(id, user);
         return users;
     }

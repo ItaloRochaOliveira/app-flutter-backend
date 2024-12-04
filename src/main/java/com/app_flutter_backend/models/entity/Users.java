@@ -2,6 +2,8 @@ package com.app_flutter_backend.models.entity;
 
 import java.sql.Date;
 
+import javax.validation.constraints.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
@@ -21,13 +23,22 @@ public class Users {
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
 
-    @Column(name = "name", nullable = true, length = 100)
+    @NotBlank(message = "O nome não pode ser vazio ou conter apenas espaços")
+    @NotNull(message = "O nome não pode ser nulo")
+    @Size(min = 3, max = 50, message = "O nome deve ter entre 3 e 50 caracteres")
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @NotBlank(message = "O email não pode ser vazio ou conter apenas espaços")
+    @NotNull(message = "O email não pode ser nulo")
+    @Size(min = 3, max = 50, message = "O email deve ter entre 3 e 50 caracteres")
     @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
 
-    @Column(name = "telefone", nullable = true, length = 17)
+    @NotBlank(message = "O telefone não pode ser vazio ou conter apenas espaços")
+    @NotNull(message = "O telefone não pode ser nulo")
+    @Size(min = 3, max = 50, message = "O telefone deve ter entre 3 e 50 caracteres")
+    @Column(name = "telefone", nullable = false, length = 17)
     private String telefone;
 
     @CreationTimestamp

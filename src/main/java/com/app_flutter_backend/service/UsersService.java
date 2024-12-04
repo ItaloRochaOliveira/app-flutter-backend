@@ -1,5 +1,6 @@
 package com.app_flutter_backend.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,11 +59,16 @@ public class UsersService {
     public IUserServiceReturn<Users> edit(String id, Users userInfo){
         Users userForUpdate = usersRepository.findById(id)
     .orElse(null);
-        userForUpdate.setName(userInfo.getName());
-        userForUpdate.setEmail(userInfo.getEmail());
-        String telefoneWithoutMask = userInfo.getTelefone().replaceAll("[\\s+\\-()]", "");
-        userForUpdate.setTelefone(telefoneWithoutMask);
-        userForUpdate.setUpdated_at(userInfo.getUpdated_at());
+        // if(userInfo.getName().isEmpty()) userForUpdate.setName(userInfo.getName());
+        if(userInfo.getName() != null) userForUpdate.setName(userInfo.getName());;
+        if(userInfo.getEmail() != null) userForUpdate.setEmail(userInfo.getEmail());
+        if(userInfo.getTelefone() != null) {
+            String telefoneWithoutMask = userInfo.getTelefone().replaceAll("[\\s+\\-()]", "");
+            userForUpdate.setTelefone(telefoneWithoutMask);
+        }
+
+        userForUpdate.setUpdated_at(new java.sql.Date(new Date().getTime()));
+
         return new IUserServiceReturn<Users>(
             200, 
         "Usuário editado com sucesso",
