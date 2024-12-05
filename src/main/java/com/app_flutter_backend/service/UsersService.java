@@ -78,7 +78,7 @@ public class UsersService {
 
     public IUserServiceReturn<Users> delete(String id){
         Users user = usersRepository.findById(id).orElse(null);
-        if(user.getId() == null) return new IUserServiceReturn<Users>(
+        if(user == null) return new IUserServiceReturn<Users>(
             200, 
         "Usuário não existe mais no banco de dados",
                 usersRepository.findById(id).orElse(null)
